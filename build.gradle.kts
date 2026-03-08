@@ -119,6 +119,10 @@ subprojects {
         }
     }
 
+    kapt {
+        correctErrorTypes = true
+    }
+
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
         version.set(properties["ktLintVersion"] as String)
     }
