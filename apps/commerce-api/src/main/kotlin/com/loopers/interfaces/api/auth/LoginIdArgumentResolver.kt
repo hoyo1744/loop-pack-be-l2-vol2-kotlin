@@ -21,7 +21,7 @@ class LoginIdArgumentResolver : HandlerMethodArgumentResolver{
         ?: throw IllegalArgumentException("")
 
     companion object {
-        private const val LOGIN_ID_HEADER = "X-USER_ID"
+        private const val LOGIN_ID_HEADER = "X-USER-ID"
     }
 }
 

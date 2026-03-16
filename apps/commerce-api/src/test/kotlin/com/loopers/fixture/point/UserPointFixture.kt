@@ -1,0 +1,20 @@
+package com.loopers.fixture.point
+
+import com.loopers.domain.point.UserPoint
+import com.loopers.domain.point.vo.Point
+import java.math.BigDecimal
+
+sealed class UserPointFixture(
+    val userId: Long = 1,
+    val balance: BigDecimal = BigDecimal.ZERO
+) {
+    data object `기본` : UserPointFixture()
+    data object `0 포인트` : UserPointFixture()
+    data object `1 포인트` : UserPointFixture(balance = BigDecimal.ONE)
+    data object `500 포인트` : UserPointFixture(balance = BigDecimal(500))
+
+
+    fun toEntity(userId: Long = this.userId): UserPoint = UserPoint(userId, Point(balance))
+
+
+}

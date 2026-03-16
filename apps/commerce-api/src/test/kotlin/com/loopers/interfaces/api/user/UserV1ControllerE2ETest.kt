@@ -1,5 +1,6 @@
 package com.loopers.interfaces.api.user
 
+import com.loopers.application.user.UserCommand
 import com.loopers.application.user.UserFacade
 import com.loopers.fixture.user.UserFixture
 import com.loopers.interfaces.api.ApiResponse
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 
@@ -27,7 +29,7 @@ class UserV1ControllerE2ETest(
             val request = UserFixture.기본
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserResponse.Profile>>(){}
 
-            //when
+            //when¡
             val result = testRestTemplate.exchange(requestUrl, HttpMethod.POST, HttpEntity(request), responseType)
 
             //then
@@ -47,11 +49,19 @@ class UserV1ControllerE2ETest(
             val requestUrl = "/api/v1/users/me"
             val request = UserFixture.기본
             val responseType = object : ParameterizedTypeReference<ApiResponse<UserResponse.MyDetail>>(){}
+            var headers = HttpHeaders()
+            headers["X-USER-ID"] = request.loginId
+            userFacade.signUp(UserCommand.SignUp(request.loginId, request.password, request.email, request.birthDay))
 
             //when
-
+            val result = testRestTemplate.exchange(requestUrl, HttpMethod.GET, HttpEntity<Any>(headers), responseType)
 
             //then
+            assertAll (
+                {assertThat(result.statusCode).isEqualTo(HttpStatus.OK)},
+                {assertThat(result.body?.data?.loginId).isEqualTo(request.loginId)}
+            )
+
         }
     }
 
